@@ -75,81 +75,80 @@ namespace PatientCarHub.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(UserVM User)
         {
-             
-            if (User.Role == "Patient")
+            var nationalIdExist = await unitOfWork.Patients.Get(x => x.NationalId == User.NationalId);
+            var emailExist = await _userManager.FindByEmailAsync(User.Email);
+            if (nationalIdExist == null && emailExist == null)
             {
-                var nationalIdExist = await unitOfWork.Patients.Get(x => x.NationalId == User.NationalId);
-                
-                if (nationalIdExist == null)
+                if (User.Role == "Patient")
                 {
-                    var user = mapper.Map<ApplicationUser>(User);
-                    var result = await _userManager.CreateAsync(user, User.Password);
-
-                    if (result.Succeeded)
+                    if (nationalIdExist == null && emailExist == null)
                     {
-                        var roleResult = await _userManager.AddToRoleAsync(user, "Patient");
-                        var patient = mapper.Map<Patient>(User);
-                        patient.Id = user.Id;
+                        var user = mapper.Map<ApplicationUser>(User);
 
-                        await unitOfWork.Patients.Add(patient);
-                        if (roleResult.Succeeded)
+                        var result = await _userManager.CreateAsync(user, User.Password);
+
+                        if (result.Succeeded)
                         {
-                            return RedirectToAction("Login");
+                            var roleResult = await _userManager.AddToRoleAsync(user, "Patient");
+                            var patient = mapper.Map<Patient>(User);
+                            patient.Id = user.Id;
+
+                            await unitOfWork.Patients.Add(patient);
+                            if (roleResult.Succeeded)
+                            {
+                                return RedirectToAction("Login");
+                            }
+                        }
+                        else
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                                return View(User);
+                            }
                         }
                     }
-                    else
+
+                }
+                else if (User.Role == "Doctor")
+                {
+                    if (nationalIdExist == null)
                     {
-                        foreach (var error in result.Errors)
+                        var user = mapper.Map<ApplicationUser>(User);
+
+
+                        var result = await _userManager.CreateAsync(user, User.Password);
+
+                        if (result.Succeeded)
                         {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                            return View(User);
+                            var roleResult = await _userManager.AddToRoleAsync(user, "Doctor");
+                            var Doctor = mapper.Map<Doctor>(User);
+                            Doctor.Id = user.Id;
+
+                            await unitOfWork.Doctors.Add(Doctor);
+
+                            if (roleResult.Succeeded)
+                            {
+                                return RedirectToAction("Index");
+                            }
+                        }
+                        else
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                                return View(User);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty,"National Id Used befoure");
-                }
 
+                }
             }
-            else if (User.Role == "Doctor")
+            else
             {
-                var nationalIdExist = await unitOfWork.Patients.Get(x => x.NationalId == User.NationalId);
-                if (nationalIdExist == null)
-                {
-                    var user = mapper.Map<ApplicationUser>(User);
-
-
-                    var result = await _userManager.CreateAsync(user, User.Password);
-
-                    if (result.Succeeded)
-                    {
-                        var roleResult = await _userManager.AddToRoleAsync(user, "Doctor");
-                        var Doctor = mapper.Map<Doctor>(User);
-                        Doctor.Id = user.Id;
-
-                        await unitOfWork.Doctors.Add(Doctor);
-
-                        if (roleResult.Succeeded)
-                        {
-                            return RedirectToAction("Index");
-                        }
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                            return View(User);
-                        }
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "National Id Used befoure");
-                } 
-
+                ModelState.AddModelError(string.Empty, "National Id or Email Used befoure");
             }
+
             return RedirectToAction("Index");
         }
 
