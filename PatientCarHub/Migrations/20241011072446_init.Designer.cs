@@ -12,8 +12,8 @@ using PatientCarHub.EFModels.Data;
 namespace PatientCarHub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241008105048_test")]
-    partial class test
+    [Migration("20241011072446_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

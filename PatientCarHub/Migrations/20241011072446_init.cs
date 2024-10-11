@@ -90,7 +90,7 @@ namespace PatientCarHub.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Addrees = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NationalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedAccount = table.Column<bool>(type: "bit", nullable: false)
                 },
