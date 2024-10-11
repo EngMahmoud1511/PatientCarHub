@@ -5,6 +5,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PatientCarHub.EFModels.Models;
 using PatientCarHub.Repositories.IRepositories;
 using PatientCarHub.ViewModels;
+using System.Security.Claims;
 
 namespace PatientCarHub.Controllers
 {
@@ -34,18 +35,36 @@ namespace PatientCarHub.Controllers
             var patient=await _userRepository.FindPatientByNationalId(nationalId);
             return View(patient);
         }
-        public async Task<IActionResult> registerAsync()
+
+        public async Task<IActionResult> SearchForPatientHistory(string patientId)
         {
-            StaticFiles doctorPatient = new StaticFiles()
-            {
-                FileName="Career",
-                FilePath="Career.pdf"
-              
-            };
-          var ok=await _unitOfWork.StaticFiles.Add(doctorPatient);
-            return Content("ok.ToString()");
+            var patient = await _unitOfWork.Examens.FindAll(
+                e=>e.PatientId==patientId,new string[] { "StaticFiles" });
+            return View(patient);
         }
-        
-           
+
+        public IActionResult assignAnExamen(string patientId)
+        {
+            ExamenVm examenVm = new ExamenVm();
+            examenVm.PatientId = patientId;
+            
+            return View(examenVm);
+        }
+        [HttpPost]
+        public async Task<IActionResult> assignAnExamen( ExamenVm examenVM)
+        {
+            if(!ModelState.IsValid)
+                return View(examenVM);
+
+            string token= HttpContext.Session.GetString("token");
+            var userData=_userRepository.DecodeJwtToken(token);
+            examenVM.DoctorId=userData[ClaimTypes.NameIdentifier];
+            var examne = _mapper.Map<Examens>(examenVM);
+            await _unitOfWork.Examens.Add(examne);
+            return View();
+        }
+
+
+
     }
 }

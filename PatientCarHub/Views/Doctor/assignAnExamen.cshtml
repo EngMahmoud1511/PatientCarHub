@@ -1,0 +1,34 @@
+﻿@model ExamenVm
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="assignAnExmane">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ExamenName" class="control-label"></label>
+                <input asp-for="ExamenName" class="form-control" />
+                <span asp-validation-for="ExamenName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExamenDate" class="control-label"></label>
+                <input asp-for="ExamenDate" class="form-control" />
+                <span asp-validation-for="ExamenDate" class="text-danger"></span>
+            </div>
+            <div class="form-group"  >
+                <input asp-for="PatientId" class="form-control" type="hidden" value="PatientId" />
+                <span asp-validation-for="PatientId" class="text-danger"></span>
+            </div>
+            
+           
+            <div class="form-group">
+                <input type="submit" value="assignAnExmane" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
