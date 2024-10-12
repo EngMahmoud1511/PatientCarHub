@@ -1,0 +1,88 @@
+﻿@model PatientCarHub.ViewModels.UserDoctorVM
+
+@{
+    ViewData["Title"] = "DoctorRegister";
+}
+
+<h1>Register</h1>
+
+<h4>UserVM</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="DoctorRegister" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" value="@Model?.FirstName" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" value="@Model?.LastName" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" value="@Model?.UserName" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" value="@Model?.Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" value="@Model?.Password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" value="@Model?.FirstName@Model?.LastName" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NationalId" class="control-label"></label>
+                <input asp-for="NationalId" class="form-control" value="@Model?.NationalId" />
+                <span asp-validation-for="NationalId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" value="@Model?.Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdentifierPath" class="control-label"></label>
+                <input type="file" asp-for="IdPath" onchange="LoadImge(event)" value="@Model?.IdPath" />
+                <img id="myimg" height="200" width="200" style="padding:20px 10px" value="~/DoctorIdentifiers/@Model?.IdentifierPath" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    var LoadImge = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var img = document.getElementById('myimg');
+            img.src = reader.result;
+        }
+        console.log(event.target.files[0]);
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

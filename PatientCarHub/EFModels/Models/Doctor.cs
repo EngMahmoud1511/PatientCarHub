@@ -13,6 +13,7 @@ namespace PatientCarHub.EFModels.Models
         public string? NationalId { get; set; }
         public bool IsAccountAcsepted { get; set; } = false;
         public bool DeletedAccount { get; set; } = false; 
+        public string? IdentifierPath { get; set; }
         public ICollection<DoctorPatient>? Patients { get; set;} 
     }
 }

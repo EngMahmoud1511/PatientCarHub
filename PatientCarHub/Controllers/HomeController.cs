@@ -1,11 +1,14 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using PatientCarHub.EFModels.Models;
 using PatientCarHub.Repositories.IRepositories;
 using PatientCarHub.ViewModels;
 using System.Diagnostics;
 using System.Security.Claims;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+
 
 namespace PatientCarHub.Controllers
 {
@@ -17,12 +20,11 @@ namespace PatientCarHub.Controllers
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-
+        private readonly IHostingEnvironment _host;
 
         public HomeController(ILogger<HomeController> logger, UserRepository userRepository,
             IMapper mapper, UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork,
-             RoleManager<IdentityRole> roleManager)
+             RoleManager<IdentityRole> roleManager,IHostingEnvironment host)
         {
             _logger = logger;
             _userRepository = userRepository;
@@ -30,6 +32,7 @@ namespace PatientCarHub.Controllers
             _userManager = userManager;
             this.unitOfWork = unitOfWork;
             _roleManager = roleManager;
+            _host = host;
         }
         public IActionResult Index()
         {
@@ -184,5 +187,65 @@ namespace PatientCarHub.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [HttpGet]
+        public IActionResult DoctorRegister()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> DoctorRegister(UserDoctorVM User)
+        {
+            if (!ModelState.IsValid || User.IdPath == null)
+                return View(User);
+
+            var nationalIdExist = await unitOfWork.Doctors.Get(x => x.NationalId == User.NationalId);
+            var emailExist = await _userManager.FindByEmailAsync(User.Email);
+            if (nationalIdExist == null && emailExist == null)
+            {
+
+                if (nationalIdExist == null && emailExist == null)
+                {
+
+                    var user = mapper.Map<ApplicationUser>(User);
+                    var result = await _userManager.CreateAsync(user, User.Password);
+
+                    if (result.Succeeded)
+                    {
+
+                        string fileName = "";
+                        string myUpload = Path.Combine(_host.WebRootPath, "DoctorIdentifiers");
+                        fileName = User.IdPath.FileName;
+                        string fullPath = Path.Combine(myUpload, fileName);
+                        User.IdPath.CopyTo(new FileStream(fullPath, FileMode.Create));
+                        User.IdentifierPath = fileName;
+
+                        var roleResult = await _userManager.AddToRoleAsync(user, "Doctor");
+                        var doctor = mapper.Map<Doctor>(User);
+                        doctor.Id = user.Id;
+
+                        await unitOfWork.Doctors.Add(doctor);
+                        if (roleResult.Succeeded)
+                        {
+                            return RedirectToAction("Login");
+                        }
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                            return View(User);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "National Id or Email Used befoure");
+            }
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
