@@ -62,6 +62,16 @@ namespace PatientCarHub.Profiles
                .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
                .ReverseMap(); // Set new Guid after mapping
 
+            CreateMap<UserDoctorVM, ApplicationUser>()
+           .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
+             .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
+             .ReverseMap(); // Set new Guid after mapping
+
+
+              CreateMap<Doctor, UserDoctorVM>().
+              ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
+              .ReverseMap();
+
         }
 
     }
