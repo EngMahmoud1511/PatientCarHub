@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PatientCarHub.EFModels.Models;
 using PatientCarHub.Repositories.IRepositories;
 using PatientCarHub.ViewModels;
+using System.Security.Claims;
 
 namespace PatientCarHub.Controllers
 {
@@ -30,10 +31,11 @@ namespace PatientCarHub.Controllers
         [HttpGet]
         public async Task<IActionResult> DoctorAppointmet(string DoctorNationalId)
         {
-            string? PatientId = HttpContext.Session.GetString("UserId");
+           string? token= HttpContext.Session.GetString("token");
 
-            if (PatientId == null)
+            if (token == null)
                 return RedirectToAction("Login", "Home");
+
             var doctor =await _unitOfWork.Doctors.Get(x => x.NationalId == DoctorNationalId);
             var doctordata = await _userManager.FindByIdAsync(doctor.Id);
             var firstMap= _mapper.Map<DoctorVM>(doctordata);
@@ -43,14 +45,15 @@ namespace PatientCarHub.Controllers
         [HttpPost]
         public async Task<IActionResult> DoctorAppointmet(Appointments appointment ,string DoctorNationalId)
         {
-           
-            appointment.PatientId = HttpContext.Session.GetString("UserId");
+           string? token=HttpContext.Session.GetString("token");
+            var PatientData=_userRepository.DecodeJwtToken(token);
+            appointment.PatientId= PatientData[ClaimTypes.NameIdentifier];
             var doctor = await _unitOfWork.Doctors.Get(x=>x.NationalId==DoctorNationalId);
-            appointment.DoctorId = doctor.Id; 
+            appointment.DoctorId = doctor.Id;
             await _unitOfWork.Appointments.Add(appointment);
             return View();  
         }
-        public IActionResult HospitalAppointment()
+        public IActionResult HospitalAppointment(string serialNumber)
         {
             return View();
         }

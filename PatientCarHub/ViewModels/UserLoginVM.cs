@@ -2,7 +2,7 @@
 
 namespace PatientCarHub.ViewModels
 {
-    public class PatientLoginVM
+    public class UserLoginVM
     {
         public string? Id {  get; set; } 
         [Required]
