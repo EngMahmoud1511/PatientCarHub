@@ -26,6 +26,5 @@ namespace PatientCarHub.ViewModels
         [Required]
         [MaxLength(50)]
         public string? Address { get; set; }
-        public string? Role {  get; set; }  
     }
 }

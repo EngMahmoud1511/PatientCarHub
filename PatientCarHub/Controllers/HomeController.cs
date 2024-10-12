@@ -58,7 +58,7 @@ namespace PatientCarHub.Controllers
                 
                 if (roles.First() == "Patient")
                 {
-                    HttpContext.Response.Cookies.Append("token", token);
+                    HttpContext.Session.SetString("token", token);
                     return RedirectToAction("Index");
                 }
                 else
@@ -71,19 +71,18 @@ namespace PatientCarHub.Controllers
         }
         //Register
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult PatientRegister()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Register(UserVM User)
+        public async Task<IActionResult> PatientRegister(UserVM User)
         {
             var nationalIdExist = await unitOfWork.Patients.Get(x => x.NationalId == User.NationalId);
             var emailExist = await _userManager.FindByEmailAsync(User.Email);
             if (nationalIdExist == null && emailExist == null)
             {
-                if (User.Role == "Patient")
-                {
+               
                     if (nationalIdExist == null && emailExist == null)
                     {
                         var user = mapper.Map<ApplicationUser>(User);
@@ -110,42 +109,7 @@ namespace PatientCarHub.Controllers
                                 return View(User);
                             }
                         }
-                    }
-
-                }
-                else if (User.Role == "Doctor")
-                {
-                    if (nationalIdExist == null)
-                    {
-                        var user = mapper.Map<ApplicationUser>(User);
-
-
-                        var result = await _userManager.CreateAsync(user, User.Password);
-
-                        if (result.Succeeded)
-                        {
-                            var roleResult = await _userManager.AddToRoleAsync(user, "Doctor");
-                            var Doctor = mapper.Map<Doctor>(User);
-                            Doctor.Id = user.Id;
-
-                            await unitOfWork.Doctors.Add(Doctor);
-
-                            if (roleResult.Succeeded)
-                            {
-                                return RedirectToAction("Index");
-                            }
-                        }
-                        else
-                        {
-                            foreach (var error in result.Errors)
-                            {
-                                ModelState.AddModelError(string.Empty, error.Description);
-                                return View(User);
-                            }
-                        }
-                    }
-
-                }
+                    }    
             }
             else
             {
@@ -155,7 +119,6 @@ namespace PatientCarHub.Controllers
             return RedirectToAction("Index");
         }
 
-
         public async Task<IActionResult>SearchForDoctor(string Spesialization)
         {
           var doctors=await _userRepository.FindDoctorBySpecialization(Spesialization);
@@ -163,7 +126,7 @@ namespace PatientCarHub.Controllers
         }
         public async Task<IActionResult>SearchForHospital(string Spesialization)
         {
-            string token = HttpContext.Request.Cookies["token"];
+            string? token = HttpContext.Session.GetString("token");
 
             if (string.IsNullOrEmpty(token))
             {

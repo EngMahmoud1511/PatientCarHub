@@ -14,7 +14,7 @@ namespace PatientCarHub
     public class Program
     {
 
-        public static   void Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -38,7 +38,10 @@ namespace PatientCarHub
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
                 };
             });
-
+            builder.Services.AddSession(options =>
+            {
+              options.IdleTimeout=TimeSpan.FromDays(1);
+            });
             // Add services to the container.
             builder.Services.AddControllersWithViews();
            
@@ -54,8 +57,8 @@ namespace PatientCarHub
 
             // add connection string
             builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-    sqlOptions => sqlOptions.CommandTimeout(60)));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+            sqlOptions => sqlOptions.CommandTimeout(60)));
 
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
