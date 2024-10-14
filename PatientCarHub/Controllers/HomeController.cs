@@ -55,10 +55,10 @@ namespace PatientCarHub.Controllers
             {
 
                 var roles =await _userManager.GetRolesAsync(userFromDb);
-                
+                HttpContext.Session.SetString("token", token);
+
                 if (roles.First() == "Patient")
                 {
-                    HttpContext.Session.SetString("token", token);
                     return RedirectToAction("Index");
                 }
                 else
