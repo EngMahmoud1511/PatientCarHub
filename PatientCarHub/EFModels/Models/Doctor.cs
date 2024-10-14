@@ -15,5 +15,6 @@ namespace PatientCarHub.EFModels.Models
         public bool DeletedAccount { get; set; } = false; 
         public string? IdentifierPath { get; set; }
         public ICollection<DoctorPatient>? Patients { get; set;} 
+        public ICollection<DoctorHospital>?Hospitals  { get; set;} 
     }
 }

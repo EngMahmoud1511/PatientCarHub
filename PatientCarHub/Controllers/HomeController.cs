@@ -1,13 +1,11 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using PatientCarHub.EFModels.Models;
 using PatientCarHub.Repositories.IRepositories;
 using PatientCarHub.ViewModels;
 using System.Diagnostics;
 using System.Security.Claims;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 
 namespace PatientCarHub.Controllers
@@ -20,11 +18,11 @@ namespace PatientCarHub.Controllers
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IHostingEnvironment _host;
+        private readonly IWebHostEnvironment _host;
 
         public HomeController(ILogger<HomeController> logger, UserRepository userRepository,
             IMapper mapper, UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork,
-             RoleManager<IdentityRole> roleManager,IHostingEnvironment host)
+             RoleManager<IdentityRole> roleManager, IWebHostEnvironment host)
         {
             _logger = logger;
             _userRepository = userRepository;
@@ -163,9 +161,7 @@ namespace PatientCarHub.Controllers
 
             var nationalIdExist = await unitOfWork.Doctors.Get(x => x.NationalId == User.NationalId);
             var emailExist = await _userManager.FindByEmailAsync(User.Email);
-            if (nationalIdExist == null && emailExist == null)
-            {
-
+          
                 if (nationalIdExist == null && emailExist == null)
                 {
 
@@ -201,7 +197,7 @@ namespace PatientCarHub.Controllers
                         }
                     }
                 }
-            }
+            
             else
             {
                 ModelState.AddModelError(string.Empty, "National Id or Email Used befoure");

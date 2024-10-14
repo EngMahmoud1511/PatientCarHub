@@ -25,6 +25,10 @@ namespace PatientCarHub.Profiles
              .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
                .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
                .ReverseMap(); // Set new Guid after mapping
+             CreateMap<StaticFiles, StaticFiles>()
+             .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
+               .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
+               .ReverseMap(); // Set new Guid after mapping
 
            
             CreateMap<Patient, PatientVM>()

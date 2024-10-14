@@ -69,5 +69,11 @@ namespace PatientCarHub.Controllers
             return View();
 
         }
+        public async Task<IActionResult> UplodeExamenResult(StaticFiles staticFiles)
+        {
+            var fileModel = _mapper.Map<StaticFiles>(staticFiles);
+            await _unitOfWork.StaticFiles.Add(fileModel);
+            return View();
+        }
     }
 }
