@@ -28,8 +28,7 @@ namespace PatientCarHub.ViewModels
         [StringLength(50, ErrorMessage = "FullName cannot be longer than 50 characters")]
         public string? FullName { get; set; }
         [Required(ErrorMessage = "NationalId is required")]
-        [StringLength(14, ErrorMessage = "NationalId cannot be longer than 50 characters")]
-        [RegularExpression("1-9")]
+        [StringLength(14, ErrorMessage = "NationalId cannot be longer than 14 number")]
         public string? NationalId { get; set; }
         [Required(ErrorMessage = "Address is required")]
         [StringLength(500, ErrorMessage = "Address cannot be longer than 50 characters")]

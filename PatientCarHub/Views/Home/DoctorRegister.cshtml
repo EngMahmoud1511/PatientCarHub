@@ -1,16 +1,56 @@
 ﻿@model PatientCarHub.ViewModels.UserDoctorVM
 
 @{
-    ViewData["Title"] = "DoctorRegister";
+  
 }
 
-<h1>Register</h1>
+<!-- Link the style.css file -->
+<!--<link rel="stylesheet" href="~/css/DoctorRegisterStyle.css" />-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
 
-<h4>UserVM</h4>
+    <meta charset="utf-8" />
+    <title>Klinik - Clinic Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="keywords" />
+    <meta content="" name="description" />
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap"
+          rel="stylesheet" />
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+          rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
+          rel="stylesheet" />
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet" />
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css"
+          rel="stylesheet" />
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet" />
+</head>
+   
+    <body>
+
+<h1>Doctor Sign Up</h1>
+
+
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="DoctorRegister" enctype="multipart/form-data">
+        <form asp-action="DoctorRegister" enctype="multipart/form-data" id="doctorRegisterForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
@@ -47,7 +87,24 @@
                 <input asp-for="NationalId" class="form-control" value="@Model?.NationalId" />
                 <span asp-validation-for="NationalId" class="text-danger"></span>
             </div>
-
+                <div class="row mb-4">
+                    <div class="col-lg-6 mx-auto">
+                        <select asp-for="Specialization" class="form-select">
+                                    <option value="">Select a General Disease Field</option>
+                                    <option value="cardiology">Cardiology</option>
+                                    <option value="dermatology">Dermatology</option>
+                                    <option value="neurology">Neurology</option>
+                                    <option value="pediatrics">Pediatrics</option>
+                                    <option value="orthopedics">Orthopedics</option>
+                                    <option value="gastroenterology">Gastroenterology</option>
+                                    <option value="oncology">Oncology</option>
+                                    <option value="psychiatry">Psychiatry</option>
+                                    <option value="gynecology">Gynecology</option>
+                                    <option value="radiology">Radiology</option>
+                                </select>
+                               
+                    </div>
+                </div>
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
                 <input asp-for="Address" class="form-control" value="@Model?.Address" />
@@ -56,8 +113,14 @@
             <div class="form-group">
                 <label asp-for="IdentifierPath" class="control-label"></label>
                 <input type="file" asp-for="IdPath" onchange="LoadImge(event)" value="@Model?.IdPath" />
-                <img id="myimg" height="200" width="200" style="padding:20px 10px" value="~/DoctorIdentifiers/@Model?.IdentifierPath" />
+                <img id="IdPathImg" height="200" width="200" style="padding:20px 10px" value="~/DoctorIdentifiers/@Model?.IdentifierPath" />
                 <span asp-validation-for="IdPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PicturePaths" class="control-label"></label>
+                <input type="file" asp-for="PicturePath" onchange="Loadpicture(event)" value="@Model?.PicturePath" />
+                <img id="PicturePathImg" height="200" width="200" style="padding:20px 10px" value="~/DoctorIdentifiers/@Model?.IdentifierPath" />
+                <span asp-validation-for="PicturePath" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -65,24 +128,31 @@
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+<script src="~/js/DoctorRegisterValidation .js"></script>
 <script>
     var LoadImge = function (event) {
         var reader = new FileReader();
         reader.onload = function () {
-            var img = document.getElementById('myimg');
+            var img = document.getElementById('IdPathImg');
+            img.src = reader.result;
+        }
+        console.log(event.target.files[0]);
+        reader.readAsDataURL(event.target.files[0]);
+    }
+    var Loadpicture = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var img = document.getElementById('PicturePathImg');
             img.src = reader.result;
         }
         console.log(event.target.files[0]);
         reader.readAsDataURL(event.target.files[0]);
     }
 </script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+</body>
+</html>

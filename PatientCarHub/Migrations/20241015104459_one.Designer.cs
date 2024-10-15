@@ -12,15 +12,15 @@ using PatientCarHub.EFModels.Data;
 namespace PatientCarHub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241011072446_init")]
-    partial class init
+    [Migration("20241015104459_one")]
+    partial class one
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -177,6 +177,9 @@ namespace PatientCarHub.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsAccountAcsepted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -268,6 +271,9 @@ namespace PatientCarHub.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IdentifierPath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsAccountAcsepted")
                         .HasColumnType("bit");
 
@@ -275,6 +281,9 @@ namespace PatientCarHub.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NationalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PicturePaths")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specialization")
@@ -573,7 +582,7 @@ namespace PatientCarHub.Migrations
             modelBuilder.Entity("PatientCarHub.EFModels.Models.DoctorHospital", b =>
                 {
                     b.HasOne("PatientCarHub.EFModels.Models.Doctor", "Doctor")
-                        .WithMany()
+                        .WithMany("Hospitals")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -656,6 +665,8 @@ namespace PatientCarHub.Migrations
 
             modelBuilder.Entity("PatientCarHub.EFModels.Models.Doctor", b =>
                 {
+                    b.Navigation("Hospitals");
+
                     b.Navigation("Patients");
                 });
 

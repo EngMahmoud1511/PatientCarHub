@@ -75,6 +75,14 @@ namespace PatientCarHub.Profiles
               CreateMap<Doctor, UserDoctorVM>().
               ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
               .ReverseMap();
+            // Mapping from Doctor to DoctorCard
+            CreateMap<Doctor, DoctorCard>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.Specialization, opt => opt.MapFrom(src => src.Specialization))
+                .ForMember(dest => dest.PicturePaths, opt => opt.MapFrom(src => src.PicturePaths))
+                .ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.Id));
+                 
+
 
         }
 

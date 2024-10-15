@@ -1,19 +1,13 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form");
-
+    const form = document.getElementById("registerForm");
     const email = document.querySelector("input[name='Email']");
     const password = document.querySelector("input[name='Password']");
-
-
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     form.addEventListener("submit", function (event) {
         let valid = true;
-        event.preventDefault();
 
-        // Validate First Name
-      
-        // Validate Email
+        // Email Validation
         if (email.value.trim() === "") {
             email.nextElementSibling.textContent = "Email is required.";
             valid = false;
@@ -24,7 +18,7 @@
             email.nextElementSibling.textContent = "";
         }
 
-        // Validate Password
+        // Password Validation
         if (password.value.trim() === "") {
             password.nextElementSibling.textContent = "Password is required.";
             valid = false;
@@ -32,9 +26,9 @@
             password.nextElementSibling.textContent = "";
         }
 
-       
-        if (valid) {
-            form.submit();
+        // Only submit if valid
+        if (!valid) {
+            event.preventDefault();
         }
     });
 });

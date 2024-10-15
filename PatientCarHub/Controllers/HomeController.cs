@@ -154,57 +154,67 @@ namespace PatientCarHub.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> DoctorRegister(UserDoctorVM User)
+        public async Task<IActionResult>DoctorRegister(UserDoctorVM User)
         {
-            if (!ModelState.IsValid || User.IdPath == null)
+            if (!ModelState.IsValid || User.IdPath == null || User.PicturePath == null)
+            {
                 return View(User);
+            }
 
             var nationalIdExist = await unitOfWork.Doctors.Get(x => x.NationalId == User.NationalId);
             var emailExist = await _userManager.FindByEmailAsync(User.Email);
-          
-                if (nationalIdExist == null && emailExist == null)
+
+            if (nationalIdExist == null && emailExist == null)
+            {
+                var user = mapper.Map<ApplicationUser>(User);
+                var result = await _userManager.CreateAsync(user, User.Password);
+
+                if (result.Succeeded)
                 {
-
-                    var user = mapper.Map<ApplicationUser>(User);
-                    var result = await _userManager.CreateAsync(user, User.Password);
-
-                    if (result.Succeeded)
+                    string myUpload = Path.Combine(_host.WebRootPath, "DoctorIdentifiers");
+                    string identifierFileName = $"{Guid.NewGuid()}_{Path.GetFileName(User.IdPath.FileName)}"; // Generate a unique file name for ID
+                    string fullIdentifierPath = Path.Combine(myUpload, identifierFileName);
+                    using (var stream = new FileStream(fullIdentifierPath, FileMode.Create))
                     {
-
-                        string fileName = "";
-                        string myUpload = Path.Combine(_host.WebRootPath, "DoctorIdentifiers");
-                        fileName = User.IdPath.FileName;
-                        string fullPath = Path.Combine(myUpload, fileName);
-                        User.IdPath.CopyTo(new FileStream(fullPath, FileMode.Create));
-                        User.IdentifierPath = fileName;
-
-                        var roleResult = await _userManager.AddToRoleAsync(user, "Doctor");
-                        var doctor = mapper.Map<Doctor>(User);
-                        doctor.Id = user.Id;
-
-                        await unitOfWork.Doctors.Add(doctor);
-                        if (roleResult.Succeeded)
-                        {
-                            return RedirectToAction("Login");
-                        }
+                        await User.IdPath.CopyToAsync(stream); // Asynchronous file copy
                     }
-                    else
+                    User.IdentifierPath = identifierFileName;
+
+                    string pictureFileName = $"{Guid.NewGuid()}_{Path.GetFileName(User.PicturePath.FileName)}"; // Generate a unique file name for Picture
+                    string fullPicturePath = Path.Combine(myUpload, pictureFileName);
+                    using (var stream = new FileStream(fullPicturePath, FileMode.Create))
                     {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                            return View(User);
-                        }
+                        await User.PicturePath.CopyToAsync(stream); // Asynchronous file copy
+                    }
+                    User.PicturePaths = pictureFileName;
+
+                    var roleResult = await _userManager.AddToRoleAsync(user, "Doctor");
+                    var doctor = mapper.Map<Doctor>(User);
+                    doctor.Id = user.Id;
+
+                    await unitOfWork.Doctors.Add(doctor);
+                    if (roleResult.Succeeded)
+                    {
+                        return RedirectToAction("Login");
                     }
                 }
-            
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(User);
+                }
+            }
             else
             {
-                ModelState.AddModelError(string.Empty, "National Id or Email Used befoure");
+                ModelState.AddModelError(string.Empty, "National ID or Email used before");
             }
 
             return RedirectToAction("Index");
         }
+
 
     }
 }

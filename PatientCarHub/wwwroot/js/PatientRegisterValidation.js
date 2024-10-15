@@ -1,17 +1,17 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form");
-    const firstName = document.querySelector("input[name='FirstName']");
-    const lastName = document.querySelector("input[name='LastName']");
-    const userName = document.querySelector("input[name='UserName']");
-    const email = document.querySelector("input[name='Email']");
-    const password = document.querySelector("input[name='Password']");
-    const nationalId = document.querySelector("input[name='NationalId']");
+    const form = document.getElementById("registerForm");
+    const firstName = document.getElementById("firstName");
+    const lastName = document.getElementById("lastName");
+    const userName = document.getElementById("userName");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const iAgree = document.getElementById("iAgree");
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    // Validate form on submission
     form.addEventListener("submit", function (event) {
         let valid = true;
-        event.preventDefault();
 
         // Validate First Name
         if (firstName.value.trim() === "") {
@@ -56,16 +56,14 @@
             password.nextElementSibling.textContent = "";
         }
 
-        // Validate National ID
-        if (nationalId.value.trim() === "") {
-            nationalId.nextElementSibling.textContent = "National ID is required.";
+        // Validate Terms & Conditions
+        if (!iAgree.checked) {
+            alert("You must agree to the terms and conditions.");
             valid = false;
-        } else {
-            nationalId.nextElementSibling.textContent = "";
         }
 
-        if (valid) {
-            form.submit();
+        if (!valid) {
+            event.preventDefault(); // Prevent form submission if validation fails
         }
     });
 });
