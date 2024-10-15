@@ -3,8 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PatientCarHub.EFModels.Models;
-using PatientCarHub.Repositories.IRepositories;
 using PatientCarHub.ViewModels;
+<<<<<<< Updated upstream
+=======
+using PatientCarHub.Repositories;
+using PatientCarHub.Repositories.IRepositories;
+using System.Reflection.Metadata.Ecma335;
+>>>>>>> Stashed changes
 using System.Security.Claims;
 
 namespace PatientCarHub.Controllers
@@ -26,12 +31,36 @@ namespace PatientCarHub.Controllers
             _unitOfWork = unitOfWork;
             
         }
+<<<<<<< Updated upstream
         public IActionResult Home()
+=======
+        public async Task<IActionResult> Index()
+>>>>>>> Stashed changes
         {
-            return View();
+            string? token = HttpContext.Session.GetString("token");
+
+            if (token == null)
+                return RedirectToAction("Login", "Home");
+
+            
+            var currentUserData = _userRepository.DecodeJwtToken(token);
+            if (currentUserData[ClaimTypes.Role]!="Doctor")
+                return View("Error");
+
+            var currentUserId = currentUserData[ClaimTypes.NameIdentifier];
+
+            var currentDoctor =await _unitOfWork.Doctors.Get(e => e.Id == currentUserId);
+            var result = _mapper.Map<DoctorVM>(currentDoctor);
+            return View(result);
         }
+<<<<<<< Updated upstream
         public async Task<IActionResult> SearchForPatient(string nationalId)
+=======
+        public async Task<IActionResult> SearchForPatient(string? nationalId)
+>>>>>>> Stashed changes
         {
+            if (nationalId == null)
+                nationalId = TempData["nationalId"]?.ToString();
             var patient=await _userRepository.FindPatientByNationalId(nationalId);
             return View(patient);
         }
@@ -39,8 +68,14 @@ namespace PatientCarHub.Controllers
         public async Task<IActionResult> SearchForPatientHistory(string patientId)
         {
             var patient = await _unitOfWork.Examens.FindAll(
+<<<<<<< Updated upstream
                 e=>e.PatientId==patientId,new string[] { "StaticFiles" });
             return View(patient);
+=======
+                e=>e.PatientId==patientId,new string[] { "StaticFiles" ,"Doctor"});
+
+            return View("PatientHistory",patient);
+>>>>>>> Stashed changes
         }
 
         public IActionResult assignAnExamen(string patientId)
@@ -61,10 +96,16 @@ namespace PatientCarHub.Controllers
             examenVM.DoctorId=userData[ClaimTypes.NameIdentifier];
             var examne = _mapper.Map<Examens>(examenVM);
             await _unitOfWork.Examens.Add(examne);
-            return View();
+            _unitOfWork.Save();
+            var nationalId=(await _unitOfWork.Patients.Get(p=>p.Id==examenVM.PatientId)).NationalId;
+            TempData["nationalId"] = nationalId;
+            return RedirectToAction("SearchForPatient", "Doctor");
         }
 
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     }
 }

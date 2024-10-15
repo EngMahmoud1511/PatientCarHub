@@ -19,6 +19,7 @@ namespace PatientCarHub.ViewModels
         public string? Password { get; set; }
         public string? Specialization { get; set; } 
         public string? FullName { get; set; }
+        public string? PicturePaths { get; set; }
         [Required]
         [MaxLength(14)]
         public string? NationalId { get; set; }

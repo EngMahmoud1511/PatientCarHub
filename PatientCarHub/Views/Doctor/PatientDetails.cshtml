@@ -1,7 +1,8 @@
-﻿@model ExamenVm
-<<<<<<< Updated upstream
-<hr />
-=======
+﻿@model PatientVM
+
+@{
+    ViewData["Title"] = "PatientDetails";
+}
 <head>
     <meta charset="utf-8" />
     <title>Klinik - Clinic Website Template</title>
@@ -36,40 +37,48 @@
     <link href="~/css/style.css" rel="stylesheet" />
 </head>
 
->>>>>>> Stashed changes
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="assignAnExamen">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ExamenName" class="control-label"></label>
-                <input asp-for="ExamenName" class="form-control" />
-                <span asp-validation-for="ExamenName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExamenDate" class="control-label"></label>
-                <input asp-for="ExamenDate" class="form-control" />
-                <span asp-validation-for="ExamenDate" class="text-danger"></span>
-            </div>
-            <div class="form-group"  >
-                <input asp-for="PatientId" class="form-control" type="hidden" value="PatientId" />
-                <span asp-validation-for="PatientId" class="text-danger"></span>
-            </div>
-            
-           
-            <div class="form-group">
-                <input type="submit" value="assignAnExmane" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div>
+    <h4>PatientDetails</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2" style="color:#0463fa">
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.FullName
+        </dd>
+        <dt class="col-sm-2" style="color:#0463fa">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Address
+        </dd>
+        <dt class="col-sm-2" style="color:#0463fa">
+            @Html.DisplayNameFor(model => model.Email)
+
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Email
+
+            </dd>
+
+        <dt class="col-sm-2" style="color:#0463fa">
+            @Html.DisplayNameFor(model => model.NationalId)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.NationalId
+        </dd>
+    </dl>
 </div>
 
+<br />
 
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
-
+<div>
+    <a asp-action="SearchForPatientHistory" class="btn-btn-light" asp-route-patientId="@Model.Id">History</a><br />
+    <a asp-action="assignAnExamen" asp-route-patientId="@Model.Id">Add New Examen</a><br />
+    <a asp-action="Index">Back to Home</a>
+</div>
 
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
