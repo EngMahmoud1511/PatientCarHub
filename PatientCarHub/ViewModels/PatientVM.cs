@@ -4,6 +4,7 @@ namespace PatientCarHub.ViewModels
 {
     public class PatientVM
     {
+        public string Id { get; set; }
         [Required]
         [MaxLength(50)]
         public string? FirstName { get; set; }

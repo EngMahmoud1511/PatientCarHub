@@ -109,7 +109,7 @@ namespace PatientCarHub.Profiles
                .ForMember(dest => dest.ExamenDate, opt => opt.MapFrom(src => src.ExamenDate))
                .ReverseMap();
 
-                .ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.Id));
+                
                  
 
 

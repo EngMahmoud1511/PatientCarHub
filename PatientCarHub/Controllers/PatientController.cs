@@ -25,9 +25,24 @@ namespace PatientCarHub.Controllers
             _userManager = userManager;
             _mapper = mapper;
         }
-        public IActionResult Index()
+        public async Task< IActionResult> Index()
         {
-            return View();
+            string? token = HttpContext.Session.GetString("token");
+
+            if (token == null)
+                return RedirectToAction("Login", "Home");
+
+
+            var currentUserData = _userRepository.DecodeJwtToken(token);
+            if (currentUserData[ClaimTypes.Role] != "Patient")
+                return View("Error");
+
+            var currentUserId = currentUserData[ClaimTypes.NameIdentifier];
+
+            var currentPatient = await _unitOfWork.Patients.Get(e => e.Id == currentUserId);
+            var result = _mapper.Map<PatientVM>(currentPatient);
+            return View(result);
+            
         }
         [HttpGet]
         public async Task<IActionResult> DoctorAppointmet(string DoctorNationalId)
