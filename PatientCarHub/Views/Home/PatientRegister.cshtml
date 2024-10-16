@@ -54,6 +54,18 @@
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
 
+
+                <div class="col-12">
+                    <label asp-for="Address" class="form-label">Address<span class="text-danger">*</span></label>
+                    <input asp-for="Address" class="form-control" id="Address" placeholder="Address" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="NationalId" class="form-label">National Id <span class="text-danger">*</span></label>
+                    <input asp-for="NationalId" class="form-control" id="NationalId" placeholder="National Id" />
+                    <span asp-validation-for="NationalId" class="text-danger"></span>
+                </div>
+
                 <!-- Email -->
                 <div class="col-12">
                     <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
@@ -84,6 +96,7 @@
                         <button class="btn btn-primary" type="submit">Sign up</button>
                     </div>
                 </div>
+
             </div>
         </form>
 

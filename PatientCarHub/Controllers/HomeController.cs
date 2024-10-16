@@ -57,7 +57,7 @@ namespace PatientCarHub.Controllers
 
                 if (roles.First() == "Patient")
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("index", "Patient");
                 }
                 else
                 {

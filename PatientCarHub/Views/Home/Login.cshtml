@@ -17,6 +17,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap"
           rel="stylesheet" />
 
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login">
+          
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
           rel="stylesheet" />
@@ -36,7 +46,9 @@
     <link href="~/css/PatientRegisterStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <form asp-action="PatientRegister" method="post" id="registerForm">
+
+    <form asp-action="Login" method="post" id="registerForm">
+
         <div class="col-12">
             <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
             <input asp-for="Email" class="form-control" id="email" />
@@ -50,6 +62,7 @@
         <div class="col-12">
             <div class="d-grid">
                 <button class="btn btn-primary" type="submit">Login</button>
+              
             </div>
         </div>
     </form>

@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PatientCarHub.EFModels.Models;
-using PatientCarHub.Repositories.IRepositories;
 using PatientCarHub.ViewModels;
+using PatientCarHub.Repositories;
+using PatientCarHub.Repositories.IRepositories;
 using System.Security.Claims;
 
 namespace PatientCarHub.Controllers

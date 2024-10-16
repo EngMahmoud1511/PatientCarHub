@@ -20,17 +20,24 @@ namespace PatientCarHub.Profiles
             CreateMap<Patient, UserVM>().
                 ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
                 .ReverseMap();
-               
+
             CreateMap<UserVM, ApplicationUser>()
              .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
                .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
                .ReverseMap(); // Set new Guid after mapping
+
+            CreateMap<StaticFiles, StaticFiles>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
+              .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
+              .ReverseMap(); // Set new Guid after mapping
+
+
              CreateMap<StaticFiles, StaticFiles>()
              .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
                .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
                .ReverseMap(); // Set new Guid after mapping
 
-           
+
             CreateMap<Patient, PatientVM>()
               .ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
               .ReverseMap();
@@ -42,15 +49,15 @@ namespace PatientCarHub.Profiles
 
                 .ForMember(dest => dest.Password, opt => opt.Ignore());// Password shouldn't be mapped from database
 
-             CreateMap<Patient, UserLoginVM>()
-              .ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
-              .ReverseMap();
+            CreateMap<Patient, UserLoginVM>()
+             .ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
+             .ReverseMap();
 
             // Map ApplicationUser to PatientVM (for user-specific details like UserName, Email)
             CreateMap<ApplicationUser, UserLoginVM>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.Id))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
 
                 .ForMember(dest => dest.Password, opt => opt.Ignore()); // Password shouldn't be mapped from database
                                                                         // Map Doctor to DoctorVM
@@ -72,14 +79,36 @@ namespace PatientCarHub.Profiles
              .ReverseMap(); // Set new Guid after mapping
 
 
+
               CreateMap<Doctor, UserDoctorVM>().
               ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
               .ReverseMap();
+
+            CreateMap<Doctor, UserDoctorVM>().
+            ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
+            .ReverseMap();
+
             // Mapping from Doctor to DoctorCard
             CreateMap<Doctor, DoctorCard>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
                 .ForMember(dest => dest.Specialization, opt => opt.MapFrom(src => src.Specialization))
                 .ForMember(dest => dest.PicturePaths, opt => opt.MapFrom(src => src.PicturePaths))
+
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
+
+
+
+            CreateMap<Examens, PatientHistoryVM>()
+               .ForMember(dest => dest.DoctorFullName, src => src.MapFrom(x => x.Doctor.FirstName + " " + x.Doctor.LastName))
+               .ForMember(dest => dest.Specialization, opt => opt.MapFrom(src => src.Doctor.Specialization))
+               .ForMember(dest => dest.Addrees, opt => opt.MapFrom(src => src.Doctor.Addrees))
+               .ForMember(dest => dest.FileName, opt => opt.MapFrom(src => src.StaticFiles.FileName))
+               .ForMember(dest => dest.FilePath, opt => opt.MapFrom(src => src.StaticFiles.FilePath))
+               .ForMember(dest => dest.UploadeDate, opt => opt.MapFrom(src => src.StaticFiles.UploadeDate))
+               .ForMember(dest => dest.ExamenName, opt => opt.MapFrom(src => src.ExamenName))
+               .ForMember(dest => dest.ExamenDate, opt => opt.MapFrom(src => src.ExamenDate))
+               .ReverseMap();
+
                 .ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.Id));
                  
 
