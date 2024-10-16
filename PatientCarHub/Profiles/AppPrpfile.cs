@@ -25,14 +25,18 @@ namespace PatientCarHub.Profiles
              .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
                .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
                .ReverseMap(); // Set new Guid after mapping
-<<<<<<< Updated upstream
-=======
+
             CreateMap<StaticFiles, StaticFiles>()
             .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
               .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
               .ReverseMap(); // Set new Guid after mapping
 
->>>>>>> Stashed changes
+
+             CreateMap<StaticFiles, StaticFiles>()
+             .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore during mapping
+               .AfterMap((src, dest) => dest.Id = Guid.NewGuid().ToString())
+               .ReverseMap(); // Set new Guid after mapping
+
 
             CreateMap<Patient, PatientVM>()
               .ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
@@ -75,19 +79,21 @@ namespace PatientCarHub.Profiles
              .ReverseMap(); // Set new Guid after mapping
 
 
-<<<<<<< Updated upstream
+
               CreateMap<Doctor, UserDoctorVM>().
               ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
               .ReverseMap();
-=======
+
             CreateMap<Doctor, UserDoctorVM>().
             ForMember(dest => dest.FullName, src => src.MapFrom(x => x.FirstName + " " + x.LastName))
             .ReverseMap();
+
             // Mapping from Doctor to DoctorCard
             CreateMap<Doctor, DoctorCard>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
                 .ForMember(dest => dest.Specialization, opt => opt.MapFrom(src => src.Specialization))
                 .ForMember(dest => dest.PicturePaths, opt => opt.MapFrom(src => src.PicturePaths))
+
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
 
@@ -102,7 +108,10 @@ namespace PatientCarHub.Profiles
                .ForMember(dest => dest.ExamenName, opt => opt.MapFrom(src => src.ExamenName))
                .ForMember(dest => dest.ExamenDate, opt => opt.MapFrom(src => src.ExamenDate))
                .ReverseMap();
->>>>>>> Stashed changes
+
+                .ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.Id));
+                 
+
 
         }
 

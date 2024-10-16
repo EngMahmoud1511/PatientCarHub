@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PatientCarHub.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class one : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,7 @@ namespace PatientCarHub.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsAccountAcsepted = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -61,7 +62,9 @@ namespace PatientCarHub.Migrations
                     Specialization = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NationalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsAccountAcsepted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAccount = table.Column<bool>(type: "bit", nullable: false)
+                    DeletedAccount = table.Column<bool>(type: "bit", nullable: false),
+                    IdentifierPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PicturePaths = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

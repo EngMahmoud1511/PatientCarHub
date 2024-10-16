@@ -17,7 +17,7 @@ namespace PatientCarHub.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -278,6 +278,9 @@ namespace PatientCarHub.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NationalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PicturePaths")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specialization")
@@ -576,7 +579,7 @@ namespace PatientCarHub.Migrations
             modelBuilder.Entity("PatientCarHub.EFModels.Models.DoctorHospital", b =>
                 {
                     b.HasOne("PatientCarHub.EFModels.Models.Doctor", "Doctor")
-                        .WithMany()
+                        .WithMany("Hospitals")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -659,6 +662,8 @@ namespace PatientCarHub.Migrations
 
             modelBuilder.Entity("PatientCarHub.EFModels.Models.Doctor", b =>
                 {
+                    b.Navigation("Hospitals");
+
                     b.Navigation("Patients");
                 });
 

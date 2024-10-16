@@ -7,9 +7,18 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PatientCarHub.styles.css" asp-append-version="true" />
+  
+        <!-- Other head content -->
+        <!-- jQuery (for validation) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- jQuery Unobtrusive Validation -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.3/jquery.validate.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
 </head>
 <body>
-<<<<<<< Updated upstream
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -27,7 +36,6 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
-=======
 
     <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0 wow fadeIn"
          data-wow-delay="0.1s">
@@ -51,43 +59,35 @@
                        class="nav-link dropdown-toggle"
                        data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu rounded-0 rounded-bottom m-0">
+
                         <a asp-action="index" asp-controller="Doctor" class="dropdown-item">Doctor Dashboard</a>
-                        <a href="patient-search.html" class="dropdown-item">Patient Search</a>
-                        <a href="patient-profile.html" class="dropdown-item">Patient Profile</a>
-                        <a href="doctor-hospital-search.html" class="dropdown-item">Doctor & Hospital Search</a>
-                        <a href="doctor-hospital-rating.html" class="dropdown-item">Doctor & Hospital Rating</a>
-                        <a href="analyzes.html" class="dropdown-item">Analyzes & X-rays</a>
-                        <a href="medical-history.html" class="dropdown-item">Medical History</a>
-                        <a href="feature.html" class="dropdown-item">Feature</a>
-                        <a href="team.html" class="dropdown-item">Our Doctor</a>
-                        <a href="appointment.html" class="dropdown-item">Appointment</a>
-                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        <a href="404.html" class="dropdown-item">404 Page</a>
 
                     </div>
->>>>>>> Stashed changes
                 </div>
+                <div class="nav-item dropdown">
+                    <a href="#"
+                       class="nav-link dropdown-toggle"
+                       data-bs-toggle="dropdown">Sign Up</a>
+                    <div class="dropdown-menu rounded-0 rounded-bottom m-0">
+                        <a asp-controller="Home" asp-action="PatientRegister" class="dropdown-item">Sign up As Patient</a>
+                        <a asp-controller="Home" asp-action="DoctorRegister" class="dropdown-item">Sign up As Doctor</a>
+                    </div>
+                </div>
+                <a asp-controller="Home" asp-action="Login" class="nav-link dropdown-toggle">Login</a>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-<<<<<<< Updated upstream
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - PatientCarHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-=======
+
     <footer>
         <p>© 2024 PatientCareHub. All rights reserved.</p>
     </footer>
 
->>>>>>> Stashed changes
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

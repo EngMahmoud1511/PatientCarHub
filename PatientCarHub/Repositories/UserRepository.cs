@@ -42,23 +42,11 @@ namespace PatientCarHub.Repositories.IRepositories
                return null;
             } 
         }
-        public async Task<List<UserVM>> FindDoctorBySpecialization(string Specialization) 
-        {
-            string role = "Doctor";
-            var doctors = await _UserManeger.GetUsersInRoleAsync(role);
-            var doctorsdata =await unitOfWork.Doctors.GetAll();
-            List<UserVM> result = new List<UserVM>(); 
+        public async Task<ICollection<DoctorCard>> FindDoctorBySpecialization(string Specialization)
+        { 
+            var doctorsdata =await unitOfWork.Doctors.FindAll(criteria:x=>x.Specialization==Specialization);
+            var  result = _mapper.Map<ICollection<DoctorCard>>(doctorsdata); 
 
-            foreach (var item in doctorsdata)
-            {
-                if (item.Specialization == Specialization)
-                {
-                    var firstMap = _mapper.Map<UserVM>(doctors.FirstOrDefault(x => x.Id == item.Id));
-
-                    var Uservm = _mapper.Map(item,firstMap);
-                    
-                }
-            }
             return result;
         }
         public async Task<PatientVM> FindPatientByNationalId(string nationalId)
